@@ -733,6 +733,15 @@
         socket.on('youAreHost', () => {
             isHost = true;
             showWaitingRoom();
+               });
+        // Quando il server notifica che la partita è stata riavviata
+socket.on('gameRestarted', (data) => {
+    console.log('Ricevuto gameRestarted', data);
+    if (data && data.players) {
+        updatePlayersList(data.players);
+    }
+    showWaitingRoom();
+
         });
         
         // UI Functions
@@ -1200,7 +1209,7 @@
             }
         }
         
- function endGame() {
+function endGame() {
     // Se non sei in una stanza, torna al welcome
     if (!currentRoom) {
         returnToWelcome();
@@ -1219,6 +1228,7 @@
     // Se NON sei host, semplicemente torna in sala d'attesa (non uscire dalla stanza)
     showWaitingRoom();
 }
+
 
         
         // Initialize
@@ -1256,4 +1266,5 @@
     </script>
 </body>
 </html>
+
 
