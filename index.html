@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gioco dell'Impostore - Multiplayer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            padding: 25px;
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            color: #5a6cf3;
+            margin-bottom: 10px;
+        }
+        
+        .header .subtitle {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #5a6cf3, #667eea);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin: 10px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(90, 108, 243, 0.4);
+        }
+        
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #26de81, #20bf6b);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #ff4757, #ff3742);
+        }
+        
+        .btn-small {
+            background: #28a745;
+            padding: 6px 12px;
+            font-size: 12px;
+            width: auto;
+            margin: 5px 2px;
+        }
+        
+        .input-group {
+            margin: 15px 0;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .input-group input:focus {
+            outline: none;
+            border-color: #5a6cf3;
+        }
+        
+        .players-list {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+        
+        .players-list h3 {
+            color: #5a6cf3;
+            margin-bottom: 10px;
+        }
+        
+        .player-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .player-name {
+            font-weight: 500;
+        }
+        
+        .player-status {
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-weight: 500;
+        }
+        
+        .status-connected {
+            background: #d1f2eb;
+            color: #00b894;
+        }
+        
+        .status-host {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .role-display {
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            margin: 20px 0;
+            border: 3px solid;
+        }
+        
+        .role-impostor {
+            background: #ffe0e0;
+            border-color: #ff4757;
+            color: #d63384;
+        }
+        
+        .role-normal {
+            background: #e8f5e8;
+            border-color: #28a745;
+            color: #155724;
+        }
+        
+        .role-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+        
+        .role-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .word-display {
+            background: rgba(255,255,255,0.8);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        .word {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .category {
+            font-size: 16px;
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+        
+        .instructions {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+        
+        .instructions h3 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        
+        .instructions ul {
+            color: #856404;
+            margin-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 5px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .error {
+            background: #ffe0e0;
+            color: #d63384;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border: 2px solid #ff4757;
+        }
+        
+        .waiting-room {
+            background: #e1f5fe;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            text-align: center;
+        }
+        
+        .waiting-room h3 {
+            color: #01579b;
+            margin-bottom: 10px;
+        }
+        
+        .game-code-display {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            text-align: center;
+            border: 2px solid #6c757d;
+        }
+        
+        .game-code-display .code {
+            font-size: 32px;
+            font-weight: bold;
+            color: #5a6cf3;
+            font-family: monospace;
+            letter-spacing: 3px;
+        }
+        
+        .connection-status {
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            text-align: center;
+            margin: 10px 0;
+        }
+        
+        .connected {
+            background: #d1f2eb;
+            color: #00b894;
+        }
+        
+        .disconnected {
+            background: #ffe0e0;
+            color: #d63384;
+        }
+        
+        .game-settings {
+            background: #e8f5e8;
+            border: 2px solid #28a745;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .game-settings h3 {
+            color: #155724;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        
+        .navigation {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .nav-btn {
+            flex: 1;
+            padding: 8px;
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            cursor: pointer;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-btn.active {
+            background: #5a6cf3;
+            color: white;
+            border-color: #5a6cf3;
+        }
+        
+        .categories-section {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+        }
+        
+        .add-category {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        
+        .add-category input {
+            flex: 1;
+            padding: 6px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        
+        .category-controls {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .category-grid {
+            max-height: 150px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 8px;
+            background: white;
+        }
+        
+        .category-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 4px;
+            margin-bottom: 4px;
+            font-size: 11px;
+        }
+        
+        .category-left {
+            display: flex;
+            align-items: center;
+            flex: 1;
+        }
+        
+        .category-checkbox {
+            margin-right: 6px;
+        }
+        
+        .delete-category-btn {
+            background: #ff4757;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            font-size: 10px;
+            margin-left: 5px;
+            flex-shrink: 0;
+        }
+        
+        .stats {
+            background: #e9ecef;
+            padding: 6px;
+            border-radius: 4px;
+            margin-top: 8px;
+            font-size: 10px;
+            text-align: center;
+            color: #666;
+        }
+
+        /* Words Editor Styles */
+        .words-editor {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .category-words {
+            margin-bottom: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            background: white;
+        }
+        
+        .category-header {
+            background: #f8f9fa;
+            padding: 8px;
+            cursor: pointer;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .category-header:hover {
+            background: #e9ecef;
+        }
+        
+        .words-list {
+            padding: 8px;
+            display: none;
+        }
+        
+        .words-list.expanded {
+            display: block;
+        }
+        
+        .word-item {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 5px;
+            align-items: center;
+        }
+        
+        .word-input {
+            flex: 1;
+            padding: 4px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            font-size: 11px;
+        }
+        
+        .delete-word-btn {
+            background: #ff4757;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .add-word-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 3px;
+            font-size: 10px;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+        
+        .words-controls {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Welcome Screen -->
+        <div id="welcomeScreen">
+            <div class="header">
+                <h1>🎭 Gioco dell'Impostore</h1>
+                <p class="subtitle">Multiplayer Locale</p>
+            </div>
+
+            <div id="connectionStatus" class="connection-status disconnected">
+                Connessione al server...
+            </div>
+            
+            <div class="instructions">
+                <h3>📋 Come funziona:</h3>
+                <ul>
+                    <li>Crea una stanza o unisciti ad una esistente</li>
+                    <li>Condividi il codice con gli altri giocatori</li>
+                    <li>L'host configura categorie e parole</li>
+                    <li>L'host avvia la partita quando tutti sono pronti</li>
+                    <li>Solo un giocatore sarà l'impostore!</li>
+                </ul>
+            </div>
+            
+            <div class="input-group">
+                <label for="playerName">Il tuo nome:</label>
+                <input type="text" id="playerName" placeholder="Inserisci il tuo nome" maxlength="20">
+            </div>
+            
+            <button class="btn" onclick="createRoom()">🎮 Crea Nuova Stanza</button>
+            
+            <div style="text-align: center; margin: 20px 0; color: #666;">— oppure —</div>
+            
+            <div class="input-group">
+                <label for="gameCode">Codice Stanza:</label>
+                <input type="text" id="gameCode" placeholder="Es: ABC123" style="text-transform: uppercase;">
+            </div>
+            
+            <button class="btn btn-secondary" onclick="joinRoom()">🚪 Unisciti alla Stanza</button>
+            
+            <div id="errorMessage" class="hidden error"></div>
+        </div>
+        
+        <!-- Waiting Room -->
+        <div id="waitingRoom" class="hidden">
+            <div class="header">
+                <h1>🎭 Sala d'Attesa</h1>
+            </div>
+            
+            <div class="game-code-display">
+                <div>Codice Stanza:</div>
+                <div class="code" id="displayGameCode">----</div>
+                <div style="font-size: 12px; color: #666; margin-top: 10px;">
+                    Condividi questo codice con gli altri giocatori
+                </div>
+            </div>
+            
+            <!-- Host Game Settings -->
+            <div id="hostGameSettings" class="hidden">
+                <div class="game-settings">
+                    <h3>⚙️ Impostazioni Gioco</h3>
+                    
+                    <!-- Navigation for Categories/Words -->
+                    <div class="navigation">
+                        <div class="nav-btn active" onclick="showSettingsTab('categories')">Categorie</div>
+                        <div class="nav-btn" onclick="showSettingsTab('words')">Parole</div>
+                    </div>
+                    
+                    <!-- Categories Settings -->
+                    <div id="categoriesTab" class="categories-section">
+                        <div class="add-category">
+                            <input type="text" id="newCategoryInput" placeholder="Nuova categoria" maxlength="30">
+                            <button class="btn-small" onclick="addNewCategory()">+</button>
+                        </div>
+                        
+                        <div class="category-controls">
+                            <button class="btn-small" onclick="selectAllCategories()">Tutte</button>
+                            <button class="btn-small" onclick="deselectAllCategories()">Nessuna</button>
+                            <button class="btn-small btn-danger" onclick="resetToDefaults()">Reset</button>
+                        </div>
+                        
+                        <div id="categoryGrid" class="category-grid">
+                            <!-- Categories will be populated by JavaScript -->
+                        </div>
+                        <div class="stats" id="categoryStats">
+                            0 categorie selezionate (0 parole totali)
+                        </div>
+                    </div>
+                    
+                    <!-- Words Editor -->
+                    <div id="wordsTab" class="hidden">
+                        <div class="words-controls">
+                            <button class="btn-small" onclick="expandAllWords()">Espandi Tutte</button>
+                            <button class="btn-small" onclick="collapseAllWords()">Chiudi Tutte</button>
+                        </div>
+                        <div id="wordsEditor" class="words-editor">
+                            <!-- Words editor will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="players-list">
+                <h3>Giocatori nella stanza (<span id="playerCount">0</span>):</h3>
+                <div id="roomPlayersList">
+                    <!-- Players will be displayed here -->
+                </div>
+            </div>
+            
+            <div id="hostControls" class="hidden">
+                <button class="btn" onclick="startGame()" id="startGameBtn">
+                    🚀 Avvia Partita (min. 3 giocatori)
+                </button>
+            </div>
+            
+            <div id="waitingForHost" class="waiting-room hidden">
+                <h3>⏳ In attesa che l'host configuri e avvii la partita...</h3>
+            </div>
+            
+            <button class="btn btn-danger" onclick="leaveRoom()">🔙 Esci dalla Stanza</button>
+        </div>
+        
+        <!-- Game Screen -->
+        <div id="gameScreen" class="hidden">
+            <div class="header">
+                <h1>🎭 Gioco dell'Impostore</h1>
+            </div>
+            
+            <div class="role-display" id="roleDisplay">
+                <!-- Role will be displayed here -->
+            </div>
+            
+            <div class="players-list">
+                <h3>Giocatori in partita:</h3>
+                <div id="gamePlayersList">
+                    <!-- Players will be displayed here -->
+                </div>
+            </div>
+            
+            <div class="instructions">
+                <h3>📋 Come si gioca:</h3>
+                <ul>
+                    <li>A turno, descrivete la parola senza dirla direttamente</li>
+                    <li>L'impostore deve cercare di capire qual è la parola</li>
+                    <li>Gli altri devono scoprire chi è l'impostore!</li>
+                    <li>Alla fine votate chi pensate sia l'impostore</li>
+                </ul>
+            </div>
+            
+            <button class="btn btn-danger" onclick="endGame()">🔄 Nuova Partita</button>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        console.log("Script iniziato");
+        
+        // Initialize socket connection
+        const socket = io();
+        
+        // Default categories (complete set matching server)
+        const defaultCategories = {
+            "Animali": ["Cane", "Gatto", "Leone", "Elefante", "Tigre", "Cavallo", "Canguro", "Panda", "Pinguino", "Delfino", "Aquila", "Gufo", "Pipistrello", "Squalo", "Tartaruga", "Volpe", "Ippopotamo", "Rinoceronte", "Scoiattolo", "Giraffa"],
+            "Film": ["Titanic", "Avatar", "Shrek", "Il Padrino", "Joker", "Inception", "Frozen", "La La Land", "Spirited Away", "Parasite", "Interstellar", "Casablanca", "Rocky", "Il Gladiatore", "Toy Story", "Cattivissimo Me", "300", "Cars", "Ratatouille", "Mad Max"],
+            "Anime": ["Naruto", "Goku", "Luffy", "Eren Jaeger", "Light Yagami", "Sailor Moon", "Nezuko", "Shinji Ikari", "Gon Freecss", "Edward Elric", "Kenshin", "Gintoki", "Levi Ackerman", "Killua", "Bulma", "Nico Robin", "Yugi", "Koro-sensei", "Inuyasha", "Makunouchi Ippo"],
+            "Videogiochi": ["Minecraft", "Fortnite", "Among Us", "Pac-Man", "Tetris", "GTA V", "The Legend of Zelda", "League of Legends", "Call of Duty", "Valorant", "Skyrim", "Overwatch", "Super Smash Bros", "Sonic", "Hollow Knight", "Cuphead", "Stardew Valley", "Terraria", "Splatoon", "Pokémon Red"],
+            "Serie TV": ["Breaking Bad", "Stranger Things", "The Office", "Squid Game", "Friends", "The Witcher", "Game of Thrones", "Dark", "Vikings", "Black Mirror", "Better Call Saul", "Sherlock", "Peaky Blinders", "Lost", "Dexter", "Prison Break", "Narcos", "How I Met Your Mother", "Westworld", "House of Cards"],
+            "Persone Famose": ["Cristiano Ronaldo", "Messi", "Leonardo da Vinci", "Lady Gaga", "Elon Musk", "Barack Obama", "Michael Jackson", "Ariana Grande", "Brad Pitt", "Rihanna", "Albert Einstein", "Oprah Winfrey", "Taylor Swift", "Usain Bolt", "Kim Kardashian", "Napoleone", "Freddie Mercury", "Shakira", "Beyoncé", "Bill Gates"],
+            "Personaggi Fittizi": ["Sherlock Holmes", "Harry Potter", "Darth Vader", "Spider-Man", "Batman", "Superman", "Iron Man", "Homer Simpson", "Bart Simpson", "Paperino", "Topolino", "Pikachu", "Ash Ketchum", "Mario", "Luigi", "Yoda", "Frodo", "Gandalf", "Hulk", "Capitan America"],
+            "Marche": ["Nike", "Adidas", "Puma", "Reebok", "Apple", "Samsung", "Sony", "Coca-Cola", "Pepsi", "Google", "Microsoft", "Toyota", "Ferrari", "Lamborghini", "Gucci", "Prada", "Louis Vuitton", "Rolex", "Zara", "Ikea"],
+            "Musica": ["Chitarra", "Pianoforte", "Batteria", "Violino", "Sassofono", "Tromba", "Arpa", "DJ", "Microfono", "Flauto", "Tamburo", "Bassista", "Cantante", "Orchestra", "Coro", "Rap", "Opera", "Jazz", "Rock", "Pop"],
+            "Trasporti": ["Automobile", "Autobus", "Treno", "Aereo", "Bicicletta", "Monopattino", "Nave", "Traghetto", "Sottomarino", "Camion", "Trattore", "Moto", "Scooter", "Funivia", "Metro", "Segway", "Skateboard", "Cavallo", "Carrozza", "Navetta spaziale"],
+            "Materiali": ["Legno", "Ferro", "Acciaio", "Oro", "Argento", "Bronzo", "Rame", "Plastica", "Vetro", "Carta", "Pietra", "Marmo", "Ceramica", "Gesso", "Alluminio", "Titanio", "Pelle", "Gomma", "Seta", "Lana"],
+            "Tecnologia": ["Smartphone", "Computer", "Tablet", "Console", "Televisione", "Stampante", "Router", "Auricolari", "Drone", "Telecamera", "Mouse", "Tastiera", "Robot", "Frigorifero", "Smartwatch", "Calcolatrice", "Videoproiettore", "Chiavetta USB", "Server", "AI"],
+            "Cibi": ["Pizza", "Pasta", "Risotto", "Lasagna", "Gelato", "Kebab", "Tiramisu", "Insalata", "Zuppa", "Couscous", "Paella", "Burrito", "Tacos", "Sushi", "Ramen", "Pollo arrosto", "Bistecca", "Pesce fritto", "Panino", "Croissant"],
+            "Citta": ["Roma", "Milano", "Napoli", "Parigi", "Londra", "New York", "Tokyo", "Berlino", "Madrid", "Barcellona", "Amsterdam", "Vienna", "Praga", "Budapest", "Atene", "Istanbul", "Mosca", "Pechino", "Sydney", "Los Angeles"],
+            "Sport": ["Calcio", "Tennis", "Basket", "Pallavolo", "Nuoto", "Atletica", "Ciclismo", "Boxing", "MMA", "Rugby", "Baseball", "Golf", "Sci", "Snowboard", "Pattinaggio", "Ginnastica", "Scherma", "Karate", "Judo", "Wrestling"],
+            "Colori": ["Rosso", "Blu", "Verde", "Giallo", "Arancione", "Viola", "Rosa", "Marrone", "Nero", "Bianco", "Grigio", "Oro", "Argento", "Bronzo", "Turchese", "Magenta", "Lime", "Indaco", "Beige", "Cremisi"],
+            "Paesi": ["Italia", "Francia", "Germania", "Spagna", "Regno Unito", "USA", "Canada", "Australia", "Giappone", "Cina", "India", "Brasile", "Argentina", "Messico", "Russia", "Turchia", "Grecia", "Olanda", "Belgio", "Svizzera"],
+            "Professioni": ["Medico", "Insegnante", "Ingegnere", "Avvocato", "Poliziotto", "Pompiere", "Cuoco", "Cameriere", "Meccanico", "Elettricista", "Idraulico", "Parrucchiere", "Dentista", "Veterinario", "Pilota", "Giornalista", "Fotografo", "Artista", "Musicista", "Attore"],
+            "Luoghi": ["Hotel", "Biblioteca", "Ospedale", "Scuola", "Supermercato", "Ristorante", "Cinema", "Teatro", "Museo", "Parco", "Spiaggia", "Montagna", "Aeroporto", "Stazione", "Centro commerciale", "Farmacia", "Banca", "Ufficio postale", "Palestra", "Chiesa"]
+        };
+        
+        // Game data
+        let categories = JSON.parse(JSON.stringify(defaultCategories));
+        let selectedCategories = Object.keys(categories);
+        
+        // Global variables
+        let currentRoom = null;
+        let currentPlayerName = null;
+        let isHost = false;
+        let gameState = null;
+        
+        // Socket event handlers
+        socket.on('connect', () => {
+            console.log('Connected to server');
+            updateConnectionStatus(true);
+        });
+        
+        socket.on('disconnect', () => {
+            console.log('Disconnected from server');
+            updateConnectionStatus(false);
+        });
+        
+        socket.on('roomCreated', (data) => {
+            console.log('Room created:', data);
+            currentRoom = data.roomCode;
+            isHost = true;
+            showWaitingRoom();
+        });
+        
+        socket.on('roomJoined', (data) => {
+            console.log('Room joined:', data);
+            currentRoom = data.roomCode;
+            isHost = data.isHost;
+            showWaitingRoom();
+        });
+        
+        socket.on('playersUpdate', (players) => {
+            console.log('Players updated:', players);
+            updatePlayersList(players);
+        });
+        
+        socket.on('gameStarted', (gameData) => {
+            console.log('Game started:', gameData);
+            gameState = gameData;
+            showGameScreen();
+        });
+        
+        socket.on('error', (message) => {
+            console.error('Server error:', message);
+            showError(message);
+        });
+        
+        socket.on('youAreHost', () => {
+            isHost = true;
+            showWaitingRoom();
+        });
+        
+        // UI Functions
+        function updateConnectionStatus(connected) {
+            const statusEl = document.getElementById('connectionStatus');
+            if (connected) {
+                statusEl.textContent = '✅ Connesso al server';
+                statusEl.className = 'connection-status connected';
+            } else {
+                statusEl.textContent = '❌ Disconnesso dal server';
+                statusEl.className = 'connection-status disconnected';
+            }
+        }
+        
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.classList.remove('hidden');
+            setTimeout(() => {
+                errorDiv.classList.add('hidden');
+            }, 5000);
+        }
+        
+        function showScreen(screenId) {
+            document.querySelectorAll('#welcomeScreen, #waitingRoom, #gameScreen').forEach(screen => {
+                screen.classList.add('hidden');
+            });
+            document.getElementById(screenId).classList.remove('hidden');
+        }
+        
+        // Settings Navigation
+        function showSettingsTab(tabName) {
+            // Update navigation buttons
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Show/hide tabs
+            document.getElementById('categoriesTab').classList.add('hidden');
+            document.getElementById('wordsTab').classList.add('hidden');
+            
+            if (tabName === 'categories') {
+                document.getElementById('categoriesTab').classList.remove('hidden');
+            } else if (tabName === 'words') {
+                document.getElementById('wordsTab').classList.remove('hidden');
+                populateWordsEditor();
+            }
+        }
+        
+        // Room Management
+        function createRoom() {
+            const playerName = document.getElementById('playerName').value.trim();
+            
+            if (!playerName) {
+                showError('Inserisci il tuo nome!');
+                return;
+            }
+            
+            currentPlayerName = playerName;
+            
+            // Generate random room code
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let roomCode = '';
+            for (let i = 0; i < 6; i++) {
+                roomCode += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            
+            socket.emit('createRoom', { roomCode, playerName });
+        }
+        
+        function joinRoom() {
+            const playerName = document.getElementById('playerName').value.trim();
+            const roomCode = document.getElementById('gameCode').value.trim().toUpperCase();
+            
+            if (!playerName) {
+                showError('Inserisci il tuo nome!');
+                return;
+            }
+            
+            if (!roomCode) {
+                showError('Inserisci il codice stanza!');
+                return;
+            }
+            
+            currentPlayerName = playerName;
+            socket.emit('joinRoom', { roomCode, playerName });
+        }
+        
+        function leaveRoom() {
+            if (currentRoom) {
+                socket.emit('leaveRoom');
+                returnToWelcome();
+            }
+        }
+        
+        function returnToWelcome() {
+            currentRoom = null;
+            currentPlayerName = null;
+            isHost = false;
+            gameState = null;
+            document.getElementById('playerName').value = '';
+            document.getElementById('gameCode').value = '';
+            showScreen('welcomeScreen');
+        }
+        
+        // Waiting Room
+        function showWaitingRoom() {
+            showScreen('waitingRoom');
+            document.getElementById('displayGameCode').textContent = currentRoom;
+            
+            if (isHost) {
+                document.getElementById('hostControls').classList.remove('hidden');
+                document.getElementById('hostGameSettings').classList.remove('hidden');
+                document.getElementById('waitingForHost').classList.add('hidden');
+                populateCategoryGrid();
+            } else {
+                document.getElementById('hostControls').classList.add('hidden');
+                document.getElementById('hostGameSettings').classList.add('hidden');
+                document.getElementById('waitingForHost').classList.remove('hidden');
+            }
+        }
+        
+        function updatePlayersList(players) {
+            const playersList = document.getElementById('roomPlayersList');
+            const playerCount = document.getElementById('playerCount');
+            
+            playerCount.textContent = players.length;
+            playersList.innerHTML = '';
+            
+            players.forEach(player => {
+                const div = document.createElement('div');
+                div.className = 'player-item';
+                
+                const isCurrentPlayer = player.name === currentPlayerName;
+                const displayName = isCurrentPlayer ? `${player.name} (Tu)` : player.name;
+                
+                let statusClass = 'status-connected';
+                let statusText = 'Connesso';
+                
+                if (player.isHost) {
+                    statusClass = 'status-host';
+                    statusText = 'Host';
+                }
+                
+                div.innerHTML = `
+                    <span class="player-name">${displayName}</span>
+                    <span class="player-status ${statusClass}">${statusText}</span>
+                `;
+                
+                playersList.appendChild(div);
+            });
+            
+            // Update start button
+            if (isHost) {
+                const startBtn = document.getElementById('startGameBtn');
+                const validWords = getValidWordsCount();
+                
+                if (players.length >= 3 && validWords > 0) {
+                    startBtn.textContent = `🚀 Avvia Partita (${players.length} giocatori)`;
+                    startBtn.disabled = false;
+                } else if (players.length < 3) {
+                    startBtn.textContent = `⏳ Servono almeno 3 giocatori (${players.length}/3)`;
+                    startBtn.disabled = true;
+                } else if (validWords === 0) {
+                    startBtn.textContent = `⚠️ Seleziona categorie con parole`;
+                    startBtn.disabled = true;
+                }
+            }
+        }
+        
+        // Category management functions
+        function populateCategoryGrid() {
+            const grid = document.getElementById('categoryGrid');
+            grid.innerHTML = '';
+            
+            Object.keys(categories).forEach(categoryName => {
+                const item = document.createElement('div');
+                item.className = 'category-item';
+                item.innerHTML = `
+                    <div class="category-left">
+                        <input type="checkbox" class="category-checkbox" 
+                               id="cat-${categoryName}" 
+                               ${selectedCategories.includes(categoryName) ? 'checked' : ''}
+                               onchange="toggleCategory('${categoryName}')">
+                        <label for="cat-${categoryName}">${categoryName} (${categories[categoryName].length})</label>
+                    </div>
+                    ${!defaultCategories.hasOwnProperty(categoryName) ? 
+                      `<button class="delete-category-btn" onclick="deleteCategory('${categoryName}')" title="Elimina categoria">×</button>` : ''}
+                `;
+                grid.appendChild(item);
+            });
+            
+            updateCategoryStats();
+        }
+
+        function addNewCategory() {
+            const input = document.getElementById('newCategoryInput');
+            const name = input.value.trim();
+            
+            if (!name) {
+                showError('Inserisci un nome per la categoria!');
+                return;
+            }
+            
+            if (categories.hasOwnProperty(name)) {
+                showError('Questa categoria esiste già!');
+                return;
+            }
+            
+            categories[name] = ["Esempio1", "Esempio2", "Esempio3"];
+            selectedCategories.push(name);
+            input.value = '';
+            populateCategoryGrid();
+            updateCategories();
+        }
+
+        function deleteCategory(categoryName) {
+            if (confirm(`Sei sicuro di voler eliminare la categoria "${categoryName}"?`)) {
+                delete categories[categoryName];
+                const index = selectedCategories.indexOf(categoryName);
+                if (index > -1) {
+                    selectedCategories.splice(index, 1);
+                }
+                populateCategoryGrid();
+                updateCategories();
+            }
+        }
+
+        function toggleCategory(categoryName) {
+            const index = selectedCategories.indexOf(categoryName);
+            if (index > -1) {
+                selectedCategories.splice(index, 1);
+            } else {
+                selectedCategories.push(categoryName);
+            }
+            updateCategoryStats();
+            updateCategories();
+        }
+
+        function selectAllCategories() {
+            selectedCategories = Object.keys(categories);
+            document.querySelectorAll('.category-checkbox').forEach(cb => cb.checked = true);
+            updateCategoryStats();
+            updateCategories();
+        }
+
+        function deselectAllCategories() {
+            selectedCategories = [];
+            document.querySelectorAll('.category-checkbox').forEach(cb => cb.checked = false);
+            updateCategoryStats();
+            updateCategories();
+        }
+
+        function resetToDefaults() {
+            if (confirm('Sei sicuro di voler resettare tutte le categorie alle impostazioni predefinite?')) {
+                categories = JSON.parse(JSON.stringify(defaultCategories));
+                selectedCategories = Object.keys(categories);
+                populateCategoryGrid();
+                updateCategories();
+            }
+        }
+
+        function updateCategoryStats() {
+            const totalWords = selectedCategories.reduce((sum, cat) => sum + (categories[cat] ? categories[cat].length : 0), 0);
+            document.getElementById('categoryStats').textContent = 
+                `${selectedCategories.length} categorie selezionate (${totalWords} parole totali)`;
+        }
+
+        function getValidWordsCount() {
+            return selectedCategories.reduce((sum, cat) => sum + (categories[cat] ? categories[cat].length : 0), 0);
+        }
+
+        function updateCategories() {
+            if (isHost && currentRoom) {
+                socket.emit('updateCategories', {
+                    roomCode: currentRoom,
+                    categories: categories,
+                    selectedCategories: selectedCategories
+                });
+            }
+        }
+        
+        // Words management functions
+        function populateWordsEditor() {
+            const editor = document.getElementById('wordsEditor');
+            editor.innerHTML = '';
+            
+            Object.keys(categories).forEach(categoryName => {
+                const categoryDiv = document.createElement('div');
+                categoryDiv.className = 'category-words';
+                
+                const header = document.createElement('div');
+                header.className = 'category-header';
+                header.innerHTML = `
+                    <span>${categoryName} (${categories[categoryName].length} parole)</span>
+                    <span>▼</span>
+                `;
+                header.onclick = () => toggleWordsCategory(categoryName);
+                
+                const wordsList = document.createElement('div');
+                wordsList.className = 'words-list';
+                wordsList.id = `words-${categoryName}`;
+                
+                categories[categoryName].forEach((word, index) => {
+                    const wordItem = document.createElement('div');
+                    wordItem.className = 'word-item';
+                    wordItem.innerHTML = `
+                        <input type="text" class="word-input" 
+                               value="${word}" 
+                               onchange="updateWord('${categoryName}', ${index}, this.value)"
+                               onblur="updateWord('${categoryName}', ${index}, this.value)">
+                        <button class="delete-word-btn" onclick="deleteWord('${categoryName}', ${index})" title="Elimina parola">×</button>
+                    `;
+                    wordsList.appendChild(wordItem);
+                });
+                
+                // Add button to add new word
+                const addWordBtn = document.createElement('button');
+                addWordBtn.className = 'add-word-btn';
+                addWordBtn.textContent = '+ Aggiungi parola';
+                addWordBtn.onclick = () => addNewWord(categoryName);
+                wordsList.appendChild(addWordBtn);
+                
+                categoryDiv.appendChild(header);
+                categoryDiv.appendChild(wordsList);
+                editor.appendChild(categoryDiv);
+            });
+        }
+
+        function updateWord(categoryName, index, newWord) {
+            const trimmedWord = newWord.trim();
+            if (trimmedWord) {
+                categories[categoryName][index] = trimmedWord;
+                updateCategoryStats();
+                updateCategories();
+                // Update header count
+                const header = document.querySelector(`#words-${categoryName}`).previousElementSibling;
+                header.querySelector('span').textContent = `${categoryName} (${categories[categoryName].length} parole)`;
+            }
+        }
+
+        function deleteWord(categoryName, index) {
+            if (categories[categoryName].length > 1) {
+                categories[categoryName].splice(index, 1);
+                populateWordsEditor();
+                updateCategoryStats();
+                updateCategories();
+            } else {
+                showError('Una categoria deve avere almeno una parola!');
+            }
+        }
+
+        function addNewWord(categoryName) {
+            const newWord = prompt(`Aggiungi una nuova parola alla categoria "${categoryName}":`);
+            if (newWord && newWord.trim()) {
+                categories[categoryName].push(newWord.trim());
+                populateWordsEditor();
+                updateCategoryStats();
+                updateCategories();
+            }
+        }
+
+        function toggleWordsCategory(categoryName) {
+            const wordsList = document.getElementById(`words-${categoryName}`);
+            const header = wordsList.previousElementSibling;
+            const arrow = header.querySelector('span:last-child');
+            
+            wordsList.classList.toggle('expanded');
+            arrow.textContent = wordsList.classList.contains('expanded') ? '▲' : '▼';
+        }
+
+        function expandAllWords() {
+            document.querySelectorAll('.words-list').forEach(list => {
+                list.classList.add('expanded');
+                const arrow = list.previousElementSibling.querySelector('span:last-child');
+                arrow.textContent = '▲';
+            });
+        }
+
+        function collapseAllWords() {
+            document.querySelectorAll('.words-list').forEach(list => {
+                list.classList.remove('expanded');
+                const arrow = list.previousElementSibling.querySelector('span:last-child');
+                arrow.textContent = '▼';
+            });
+        }
+        
+        // Game Logic
+        function startGame() {
+            if (!isHost || !currentRoom) return;
+            
+            if (selectedCategories.length === 0) {
+                showError('Seleziona almeno una categoria!');
+                return;
+            }
+            
+            const validCategories = selectedCategories.filter(cat => categories[cat] && categories[cat].length > 0);
+            if (validCategories.length === 0) {
+                showError('Le categorie selezionate non hanno parole!');
+                return;
+            }
+            
+            const randomCategory = validCategories[Math.floor(Math.random() * validCategories.length)];
+            const words = categories[randomCategory];
+            const randomWord = words[Math.floor(Math.random() * words.length)];
+            
+            socket.emit('startGame', {
+                roomCode: currentRoom,
+                category: randomCategory,
+                word: randomWord
+            });
+        }
+        
+        function showGameScreen() {
+            showScreen('gameScreen');
+            
+            if (!gameState) return;
+            
+            const roleDisplay = document.getElementById('roleDisplay');
+            
+            if (gameState.isImpostor) {
+                roleDisplay.className = 'role-display role-impostor';
+                roleDisplay.innerHTML = `
+                    <div class="role-icon">🕵️‍♂️</div>
+                    <div class="role-title">Sei l'IMPOSTORE!</div>
+                    <div class="word-display">
+                        <div>Categoria:</div>
+                        <div class="word">${gameState.category}</div>
+                    </div>
+                    <div style="font-size: 14px; margin-top: 10px;">
+                        Non conosci la parola! Cerca di non farti scoprire.
+                    </div>
+                `;
+            } else {
+                roleDisplay.className = 'role-display role-normal';
+                roleDisplay.innerHTML = `
+                    <div class="role-icon">👥</div>
+                    <div class="role-title">Sei un giocatore NORMALE</div>
+                    <div class="word-display">
+                        <div>La parola è:</div>
+                        <div class="word">${gameState.word}</div>
+                        <div class="category">Categoria: ${gameState.category}</div>
+                    </div>
+                `;
+            }
+            
+            // Update players list in game
+            const playersList = document.getElementById('gamePlayersList');
+            playersList.innerHTML = '';
+            
+            if (gameState.players && gameState.players.length > 0) {
+                gameState.players.forEach(player => {
+                    const div = document.createElement('div');
+                    div.className = 'player-item';
+                    
+                    const isCurrentPlayer = player === currentPlayerName;
+                    const displayName = isCurrentPlayer ? `${player} (Tu)` : player;
+                    
+                    div.innerHTML = `
+                        <span class="player-name">${displayName}</span>
+                        <span class="player-status status-connected">In gioco</span>
+                    `;
+                    
+                    playersList.appendChild(div);
+                });
+            }
+        }
+        
+        function endGame() {
+            socket.emit('leaveRoom');
+            showWaitingRoom();
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Auto-uppercase room code input
+            document.getElementById('gameCode').addEventListener('input', function(e) {
+                e.target.value = e.target.value.toUpperCase();
+            });
+            
+            // Enter key handlers
+            document.getElementById('playerName').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    const gameCode = document.getElementById('gameCode').value;
+                    if (gameCode) {
+                        joinRoom();
+                    } else {
+                        createRoom();
+                    }
+                }
+            });
+            
+            document.getElementById('gameCode').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    joinRoom();
+                }
+            });
+            
+            // Allow adding categories with Enter key
+            document.getElementById('newCategoryInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    addNewCategory();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
