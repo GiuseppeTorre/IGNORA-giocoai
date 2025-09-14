@@ -237,30 +237,28 @@ io.on('connection', (socket) => {
     });
 
     // NUOVO: Restart game (solo per host)
-    socket.on('restartGame', (data) => {
-        const { roomCode } = data;
-        const room = gameRooms.get(roomCode);
-        
-        if (!room) {
-            socket.emit('error', 'Stanza non trovata');
-            return;
-        }
-        
-        if (room.host !== socket.id) {
-            socket.emit('error', 'Solo l\'host può riavviare la partita');
-            return;
-        }
-        
-        // Reset game state ma mantieni i giocatori
-        room.gameStarted = false;
-        room.gameData = null;
-        
-        // Riporta tutti alla waiting room
-        io.to(roomCode).emit('gameRestarted');
-        io.to(roomCode).emit('playersUpdate', room.players);
-        
-        console.log(`Game restarted in room ${roomCode} by ${socket.playerName}`);
-    });
+    // Restart game (host only)
+socket.on('restartGame', (data) => {
+    const { roomCode } = data;
+    const room = gameRooms.get(roomCode);
+
+    if (!room) {
+        socket.emit('error', 'Stanza non trovata');
+        return;
+    }
+
+    if (room.host !== socket.id) {
+        socket.emit('error', 'Solo l\'host può riavviare la partita');
+        return;
+    }
+
+    room.gameStarted = false;
+    room.gameData = null;
+
+    io.to(roomCode).emit('gameRestarted');
+    console.log(`Game restarted in room ${roomCode}`);
+});
+
 
     // Leave room
     socket.on('leaveRoom', () => {
@@ -347,3 +345,4 @@ io.on('connection', (socket) => {
 server.listen(PORT, () => {
     console.log(`Server in ascolto su http://localhost:${PORT}`);
 });
+
