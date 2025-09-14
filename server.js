@@ -3,23 +3,25 @@ const defaultCategories = {
     "Animali": ["Cane", "Gatto", "Leone", "Elefante", "Tigre", "Cavallo", "Canguro", "Panda", "Pinguino", "Delfino", "Aquila", "Gufo", "Pipistrello", "Squalo", "Tartaruga", "Volpe", "Ippopotamo", "Rinoceronte", "Scoiattolo", "Giraffa"],
     "Film": ["Titanic", "Avatar", "Shrek", "Il Padrino", "Joker", "Inception", "Frozen", "La La Land", "Spirited Away", "Parasite", "Interstellar", "Casablanca", "Rocky", "Il Gladiatore", "Toy Story", "Cattivissimo Me", "300", "Cars", "Ratatouille", "Mad Max"],
     "Anime": ["Naruto", "Goku", "Luffy", "Eren Jaeger", "Light Yagami", "Sailor Moon", "Nezuko", "Shinji Ikari", "Gon Freecss", "Edward Elric", "Kenshin", "Gintoki", "Levi Ackerman", "Killua", "Bulma", "Nico Robin", "Yugi", "Koro-sensei", "Inuyasha", "Makunouchi Ippo"],
-    "Videogiochi": ["Minecraft", "Fortnite", "Among Us", "Pac-Man", "Tetris", "GTA V", "The Legend of Zelda", "League of Legends", "Call of Duty", "Valorant", "Skyrim", "Overwatch", "Super Smash Bros", "Sonic", "Hollow Knight", "Cuphead", "Stardew Valley", "Terraria", "Splatoon", "Pokémon Red"],
+    "Videogiochi": ["Minecraft", "Fortnite", "Among Us", "Pac-Man", "Tetris", "GTA V", "The Legend of Zelda", "League of Legends", "Call of Duty", "Valorant", "Skyrim", "Overwatch", "Super Smash Bros", "Sonic", "Hollow Knight", "Cuphead", "Stardew Valley", "Terraria", "Splatoon", "PokÃ©mon Red"],
     "Serie TV": ["Breaking Bad", "Stranger Things", "The Office", "Squid Game", "Friends", "The Witcher", "Game of Thrones", "Dark", "Vikings", "Black Mirror", "Better Call Saul", "Sherlock", "Peaky Blinders", "Lost", "Dexter", "Prison Break", "Narcos", "How I Met Your Mother", "Westworld", "House of Cards"],
-    "Persone Famose": ["Cristiano Ronaldo", "Messi", "Leonardo da Vinci", "Lady Gaga", "Elon Musk", "Barack Obama", "Michael Jackson", "Ariana Grande", "Brad Pitt", "Rihanna", "Albert Einstein", "Oprah Winfrey", "Taylor Swift", "Usain Bolt", "Kim Kardashian", "Napoleone", "Freddie Mercury", "Shakira", "Beyoncé", "Bill Gates"],
+    "Persone Famose": ["Cristiano Ronaldo", "Messi", "Leonardo da Vinci", "Lady Gaga", "Elon Musk", "Barack Obama", "Michael Jackson", "Ariana Grande", "Brad Pitt", "Rihanna", "Albert Einstein", "Oprah Winfrey", "Taylor Swift", "Usain Bolt", "Kim Kardashian", "Napoleone", "Freddie Mercury", "Shakira", "BeyoncÃ©", "Bill Gates"],
     "Personaggi Fittizi": ["Sherlock Holmes", "Harry Potter", "Darth Vader", "Spider-Man", "Batman", "Superman", "Iron Man", "Homer Simpson", "Bart Simpson", "Paperino", "Topolino", "Pikachu", "Ash Ketchum", "Mario", "Luigi", "Yoda", "Frodo", "Gandalf", "Hulk", "Capitan America"],
     "Marche": ["Nike", "Adidas", "Puma", "Reebok", "Apple", "Samsung", "Sony", "Coca-Cola", "Pepsi", "Google", "Microsoft", "Toyota", "Ferrari", "Lamborghini", "Gucci", "Prada", "Louis Vuitton", "Rolex", "Zara", "Ikea"],
     "Musica": ["Chitarra", "Pianoforte", "Batteria", "Violino", "Sassofono", "Tromba", "Arpa", "DJ", "Microfono", "Flauto", "Tamburo", "Bassista", "Cantante", "Orchestra", "Coro", "Rap", "Opera", "Jazz", "Rock", "Pop"],
     "Trasporti": ["Automobile", "Autobus", "Treno", "Aereo", "Bicicletta", "Monopattino", "Nave", "Traghetto", "Sottomarino", "Camion", "Trattore", "Moto", "Scooter", "Funivia", "Metro", "Segway", "Skateboard", "Cavallo", "Carrozza", "Navetta spaziale"],
     "Materiali": ["Legno", "Ferro", "Acciaio", "Oro", "Argento", "Bronzo", "Rame", "Plastica", "Vetro", "Carta", "Pietra", "Marmo", "Ceramica", "Gesso", "Alluminio", "Titanio", "Pelle", "Gomma", "Seta", "Lana"],
     "Tecnologia": ["Smartphone", "Computer", "Tablet", "Console", "Televisione", "Stampante", "Router", "Auricolari", "Drone", "Telecamera", "Mouse", "Tastiera", "Robot", "Frigorifero", "Smartwatch", "Calcolatrice", "Videoproiettore", "Chiavetta USB", "Server", "AI"],
-    "Cibi": ["Pizza", "Pasta", "Risotto", "Lasagna", "Gelato", "Kebab", "Tiramisù", "Insalata", "Zuppa", "Couscous", "Paella", "Burrito", "Tacos", "Sushi", "Ramen", "Pollo arrosto", "Bistecca", "Pesce fritto", "Panino", "Croissant"],
-    "Città": ["Roma", "Milano", "Napoli", "Parigi", "Londra", "New York", "Tokyo", "Berlino", "Madrid", "Barcellona", "Amsterdam", "Vienna", "Praga", "Budapest", "Atene", "Istanbul", "Mosca", "Pechino", "Sydney", "Los Angeles"],
+    "Cibi": ["Pizza", "Pasta", "Risotto", "Lasagna", "Gelato", "Kebab", "TiramisÃ¹", "Insalata", "Zuppa", "Couscous", "Paella", "Burrito", "Tacos", "Sushi", "Ramen", "Pollo arrosto", "Bistecca", "Pesce fritto", "Panino", "Croissant"],
+    "CittÃ ": ["Roma", "Milano", "Napoli", "Parigi", "Londra", "New York", "Tokyo", "Berlino", "Madrid", "Barcellona", "Amsterdam", "Vienna", "Praga", "Budapest", "Atene", "Istanbul", "Mosca", "Pechino", "Sydney", "Los Angeles"],
     "Sport": ["Calcio", "Tennis", "Basket", "Pallavolo", "Nuoto", "Atletica", "Ciclismo", "Boxing", "MMA", "Rugby", "Baseball", "Golf", "Sci", "Snowboard", "Pattinaggio", "Ginnastica", "Scherma", "Karate", "Judo", "Wrestling"],
     "Colori": ["Rosso", "Blu", "Verde", "Giallo", "Arancione", "Viola", "Rosa", "Marrone", "Nero", "Bianco", "Grigio", "Oro", "Argento", "Bronzo", "Turchese", "Magenta", "Lime", "Indaco", "Beige", "Cremisi"],
     "Paesi": ["Italia", "Francia", "Germania", "Spagna", "Regno Unito", "USA", "Canada", "Australia", "Giappone", "Cina", "India", "Brasile", "Argentina", "Messico", "Russia", "Turchia", "Grecia", "Olanda", "Belgio", "Svizzera"],
     "Professioni": ["Medico", "Insegnante", "Ingegnere", "Avvocato", "Poliziotto", "Pompiere", "Cuoco", "Cameriere", "Meccanico", "Elettricista", "Idraulico", "Parrucchiere", "Dentista", "Veterinario", "Pilota", "Giornalista", "Fotografo", "Artista", "Musicista", "Attore"],
     "Luoghi": ["Hotel", "Biblioteca", "Ospedale", "Scuola", "Supermercato", "Ristorante", "Cinema", "Teatro", "Museo", "Parco", "Spiaggia", "Montagna", "Aeroporto", "Stazione", "Centro commerciale", "Farmacia", "Banca", "Ufficio postale", "Palestra", "Chiesa"]
-};const express = require('express');
+};
+
+const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
 const path = require('path');
@@ -73,7 +75,7 @@ io.on('connection', (socket) => {
         }
         
         if (gameRooms.has(roomCode)) {
-            socket.emit('error', 'Questa stanza esiste già');
+            socket.emit('error', 'Questa stanza esiste giÃ ');
             return;
         }
         
@@ -125,13 +127,13 @@ io.on('connection', (socket) => {
         }
         
         if (room.gameStarted) {
-            socket.emit('error', 'La partita è già iniziata');
+            socket.emit('error', 'La partita Ã¨ giÃ  iniziata');
             return;
         }
         
         // Check if name is already taken
         if (room.players.some(p => p.name === playerName)) {
-            socket.emit('error', 'Nome già in uso in questa stanza');
+            socket.emit('error', 'Nome giÃ  in uso in questa stanza');
             return;
         }
         
@@ -165,7 +167,7 @@ io.on('connection', (socket) => {
         }
         
         if (room.host !== socket.id) {
-            socket.emit('error', 'Solo l\'host può modificare le categorie');
+            socket.emit('error', 'Solo l\'host puÃ² modificare le categorie');
             return;
         }
         
@@ -195,12 +197,12 @@ io.on('connection', (socket) => {
         }
         
         if (room.host !== socket.id) {
-            socket.emit('error', 'Solo l\'host può avviare la partita');
+            socket.emit('error', 'Solo l\'host puÃ² avviare la partita');
             return;
         }
 
         if (room.gameStarted) {
-            socket.emit('error', 'La partita è già iniziata');
+            socket.emit('error', 'La partita Ã¨ giÃ  iniziata');
             return;
         }
 
@@ -234,6 +236,32 @@ io.on('connection', (socket) => {
         console.log(`Game started in room ${roomCode}. Impostor index: ${impostorIndex}`);
     });
 
+    // NUOVO: Restart game (solo per host)
+    socket.on('restartGame', (data) => {
+        const { roomCode } = data;
+        const room = gameRooms.get(roomCode);
+        
+        if (!room) {
+            socket.emit('error', 'Stanza non trovata');
+            return;
+        }
+        
+        if (room.host !== socket.id) {
+            socket.emit('error', 'Solo l\'host può riavviare la partita');
+            return;
+        }
+        
+        // Reset game state ma mantieni i giocatori
+        room.gameStarted = false;
+        room.gameData = null;
+        
+        // Riporta tutti alla waiting room
+        io.to(roomCode).emit('gameRestarted');
+        io.to(roomCode).emit('playersUpdate', room.players);
+        
+        console.log(`Game restarted in room ${roomCode} by ${socket.playerName}`);
+    });
+
     // Leave room
     socket.on('leaveRoom', () => {
         const roomCode = socket.currentRoom;
@@ -243,6 +271,13 @@ io.on('connection', (socket) => {
 
         const room = gameRooms.get(roomCode);
         if (!room) return;
+
+        // NUOVO: Se l'host esce durante una partita, avvisa tutti
+        if (room.gameStarted && room.host === socket.id) {
+            room.gameStarted = false;
+            room.gameData = null;
+            io.to(roomCode).emit('hostLeftGame');
+        }
 
         // Rimuovi il giocatore
         room.players = room.players.filter(p => p.socketId !== socket.id);
@@ -256,7 +291,7 @@ io.on('connection', (socket) => {
 
         io.to(roomCode).emit('playersUpdate', room.players);
 
-        // Se la stanza è vuota, cancellala
+        // Se la stanza Ã¨ vuota, cancellala
         if (room.players.length === 0) {
             gameRooms.delete(roomCode);
             console.log(`Room ${roomCode} deleted because empty`);
@@ -279,6 +314,13 @@ io.on('connection', (socket) => {
         const room = gameRooms.get(roomCode);
         if (!room) return;
 
+        // NUOVO: Se l'host si disconnette durante una partita, avvisa tutti
+        if (room.gameStarted && room.host === socket.id) {
+            room.gameStarted = false;
+            room.gameData = null;
+            io.to(roomCode).emit('hostLeftGame');
+        }
+
         // Rimuovi il giocatore
         room.players = room.players.filter(p => p.socketId !== socket.id);
 
@@ -291,7 +333,7 @@ io.on('connection', (socket) => {
 
         io.to(roomCode).emit('playersUpdate', room.players);
 
-        // Se la stanza è vuota, cancellala
+        // Se la stanza Ã¨ vuota, cancellala
         if (room.players.length === 0) {
             gameRooms.delete(roomCode);
             console.log(`Room ${roomCode} deleted because empty`);
