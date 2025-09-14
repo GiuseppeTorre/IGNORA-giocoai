@@ -238,6 +238,7 @@ io.on('connection', (socket) => {
 
     // NUOVO: Restart game (solo per host)
     // Restart game (host only)
+// Restart game (host only)
 socket.on('restartGame', (data) => {
     const { roomCode } = data;
     const room = gameRooms.get(roomCode);
@@ -255,7 +256,11 @@ socket.on('restartGame', (data) => {
     room.gameStarted = false;
     room.gameData = null;
 
-    io.to(roomCode).emit('gameRestarted');
+    // Notifica tutti i client che la partita è stata riavviata
+    io.to(roomCode).emit('gameRestarted', { players: room.players });
+    // Aggiorna la lista giocatori (utile per ridisegnare la UI)
+    io.to(roomCode).emit('playersUpdate', room.players);
+
     console.log(`Game restarted in room ${roomCode}`);
 });
 
@@ -345,4 +350,5 @@ socket.on('restartGame', (data) => {
 server.listen(PORT, () => {
     console.log(`Server in ascolto su http://localhost:${PORT}`);
 });
+
 
