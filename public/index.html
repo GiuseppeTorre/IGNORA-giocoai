@@ -1200,16 +1200,26 @@
             }
         }
         
-        function endGame() {
-            if (isHost && currentRoom) {
-                // Se sei l'host, riavvia il gioco per tutti
-                socket.emit('restartGame', { roomCode: currentRoom });
-            } else {
-                // Se non sei l'host, esci dalla stanza
-                socket.emit('leaveRoom');
-                returnToWelcome();
-            }
-        }
+ function endGame() {
+    // Se non sei in una stanza, torna al welcome
+    if (!currentRoom) {
+        returnToWelcome();
+        return;
+    }
+
+    // Se sei host, chiedi al server di riavviare la partita (mantieni la stanza)
+    if (isHost && currentRoom) {
+        socket.emit('restartGame', { roomCode: currentRoom });
+        // opzionale: disabilita il pulsante per evitare doppie richieste
+        const startBtn = document.getElementById('startGameBtn');
+        if (startBtn) startBtn.disabled = true;
+        return;
+    }
+
+    // Se NON sei host, semplicemente torna in sala d'attesa (non uscire dalla stanza)
+    showWaitingRoom();
+}
+
         
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
@@ -1246,3 +1256,4 @@
     </script>
 </body>
 </html>
+
