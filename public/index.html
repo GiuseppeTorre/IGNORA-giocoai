@@ -1201,8 +1201,14 @@
         }
         
         function endGame() {
-            socket.emit('leaveRoom');
-            showWaitingRoom();
+            if (isHost && currentRoom) {
+                // Se sei l'host, riavvia il gioco per tutti
+                socket.emit('restartGame', { roomCode: currentRoom });
+            } else {
+                // Se non sei l'host, esci dalla stanza
+                socket.emit('leaveRoom');
+                returnToWelcome();
+            }
         }
         
         // Initialize
